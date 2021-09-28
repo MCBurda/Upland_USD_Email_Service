@@ -17,7 +17,7 @@ def get_inbox(username, password):
     mail.login(username, password)
     mail.select("\"" + "Upland/Upland to USD" + "\"")
 
-    _, search_data = mail.search(None, "Seen") # I specify that I am only searching for "seen" emails.
+    _, search_data = mail.search(None, "seen") # I specify that I am only searching for "seen" emails.
     # You can change this to "Unseen" or "All".
 
     email_data = {}
@@ -41,7 +41,17 @@ def get_inbox(username, password):
 
         # If the email is about money that I paid, change the formatting of the post data to type = Buy
         elif "You paid USD" in email_message["subject"]:
-            pass
+            for part in email_message.walk():
+                if part.get_content_type() == "text/plain":
+                    body = part.get_payload(decode=True).decode()
+                    transaction_id = body.split("Transaction ID:")[1].split("\n")[0].strip()
+                    email_data[transaction_id] = {}
+                    email_data[transaction_id]["type"] = "Buy"
+                    email_data[transaction_id]["date"] = body.split("Transaction Date:")[1].split("\n")[0].strip()
+                    email_data[transaction_id]["property"] = body.split("ITEM(S)")[1].split("USD")[1].split("\n")[2].strip()
+                    email_data[transaction_id]["amount"] = float(
+                        body.split("TOTAL:")[1].split("\n")[0].split("USD")[1].strip())
+                    print(email_data[transaction_id])
 
         # In any other special situation, pass
         else:
