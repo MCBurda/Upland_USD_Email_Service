@@ -22,6 +22,9 @@ def get_inbox(username, password):
 
     email_data = {}
     for num in search_data[0].split():
+        # If we get to email older than the last 40, skip them
+        #if int.from_bytes(num, "big") >= int.from_bytes(b'40', "big"):
+           # continue
         print(num)
         _, data = mail.fetch(num, '(RFC822)')
         _, b = data[0]
@@ -51,7 +54,6 @@ def get_inbox(username, password):
                     email_data[transaction_id]["property"] = body.split("ITEM(S)")[1].split("USD")[1].split("\n")[2].strip()
                     email_data[transaction_id]["amount"] = float(
                         body.split("TOTAL:")[1].split("\n")[0].split("USD")[1].strip())
-                    print(email_data[transaction_id])
 
         # In any other special situation, pass
         else:
