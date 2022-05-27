@@ -38,7 +38,7 @@ def get_inbox(username, password):
                     transaction_id = body.split("Transaction ID:")[1].split("\n")[0].strip()
                     email_data[transaction_id] = {}
                     email_data[transaction_id]["type"] = "Sell"
-                    email_data[transaction_id]["date"] = body.split("Transaction Date:")[1].split("\n")[0].strip()
+                    email_data[transaction_id]["date"] = body.split("Transaction Date:")[1].split("\n")[0].split("UTC")[0].strip()
                     email_data[transaction_id]["property"] = body.split("Item: ")[1].split("\n")[0].strip()
                     email_data[transaction_id]["amount"] = float(body.split("Amount: USD ")[1].split("\n")[0].strip())
 
@@ -50,7 +50,7 @@ def get_inbox(username, password):
                     transaction_id = body.split("Transaction ID:")[1].split("\n")[0].strip()
                     email_data[transaction_id] = {}
                     email_data[transaction_id]["type"] = "Buy"
-                    email_data[transaction_id]["date"] = body.split("Transaction Date:")[1].split("\n")[0].strip()
+                    email_data[transaction_id]["date"] = body.split("Transaction Date:")[1].split("\n")[0].split("UTC")[0].strip()
                     email_data[transaction_id]["property"] = body.split("ITEM(S)")[1].split("USD")[1].split("\n")[2].strip()
                     email_data[transaction_id]["amount"] = float(
                         body.split("TOTAL:")[1].split("\n")[0].split("USD")[1].strip())
